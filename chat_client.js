@@ -33,7 +33,7 @@
 			}
 
 		},
-		//更新在线人数，并在加入、退出的时候调用
+		//更新在线人数，并在有用户加入、退出的时候调用
 		onlinenum: function (o) {
 			var name = '';
 			for (i in o.onlineUsers) {
@@ -45,6 +45,7 @@
 		init: function(username){
 			this.userid = this.genUid();
 			this.username = username;
+			//监听提交消息
 			socket.on('message', function (obj) {
 				var isme = (obj.userid == CHAT.userid) ? true : false;
 				var contentDiv = '<div>' + obj.content + '</div>';
@@ -88,43 +89,20 @@
 
 		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-// //监听新用户登录
-// 	socket.on('login',{userid: this.userid, username: this.username},function(o){
-// 		console.log('login 登录成功');
-// 		console.log(o);
-// 		var onlinecount = document.getElementById('onlinecount');
-// 		var count = o.onlineCount;
-// 		var name = '';
-// 		for(var i in o.onlineUsers){
-// 			name += o.onlineUsers[i] + "、";
-// 		}
-// 		onlinecount.innerHTML = "当前在线人数为:"+count+" "+"用户名为:"+name;
-// 		var msg = document.getElementById("message");
-// 		var load_msg = document.createElement("div");
-// 		msg.appendChild(load_msg);
-// 		load_msg.classList.add('center_load');
-// 		load_msg.innerHTML = o.user.username +"进入了聊天室";
-// 	}),
-// 		//监听用户退出
-// 		socket.on('logout',function(o){
-// 			console.log('logout 用户退出');
-// 			var _msg = document.getElementById("message");
-// 			var exit_msg = document.createElement("div");
-// 			_msg.appendChild(exit_msg);
-// 			exit_msg.classList.add('center_exit');
-// 			exit_msg.innerHTML = o.user.username +"退出了聊天室";
-// 		})
+	//通过“回车”提交用户名
+	d.getElementById("username").onkeydown = function (e) {
+		e = e || event;
+		if (e.keyCode === 13) {
+			CHAT.usernameSubmit();
+		}
+	};
+	//通过“回车”提交信息
+	d.getElementById("content").onkeydown = function (e) {
+		e = e || event;
+		if (e.keyCode === 13) {
+			CHAT.submit();
+		}
+	};
 
 })()
 
