@@ -5,6 +5,10 @@
 	var socket = io.connect(url);
 	w.CHAT = {
 		msgObj: d.getElementById("message"),
+		//让浏览器滚动条保持在最低部
+		scrollToBottom: function () {
+			w.scrollTo(0, this.msgObj.clientHeight);
+		},
 		submit: function () {
 			var content = d.getElementById("content").value;
 			if (content != '') {
@@ -35,6 +39,7 @@
 		},
 		//更新在线人数，并在有用户加入、退出的时候调用
 		onlinenum: function (o) {
+			console.log(o);
 			var name = '';
 			for (i in o.onlineUsers) {
 				name += o.onlineUsers[i]+"、";
@@ -61,6 +66,7 @@
 					section.className = 'service';
 					section.innerHTML = usernameDiv + contentDiv;
 				}
+				CHAT.scrollToBottom();
 
 			});
 
@@ -71,7 +77,7 @@
 			socket.on('login', function (o) {
 				CHAT.onlinenum(o, 'login');
 				var msg = document.getElementById("message");
-				var load_msg = document.createElement("div");
+				var load_msg = document.createElement("section");
 				msg.appendChild(load_msg);
 				load_msg.classList.add('center_load');
 				load_msg.innerHTML = o.user.username +"进入了聊天室";
@@ -81,14 +87,14 @@
 			socket.on('logout', function (o) {
 				CHAT.onlinenum(o, 'logout');
 				var _msg = document.getElementById("message");
-				var exit_msg = document.createElement("div");
+				var exit_msg = document.createElement("section");
 				_msg.appendChild(exit_msg);
 				exit_msg.classList.add('center_exit');
 				exit_msg.innerHTML = o.user.username +"退出了聊天室";
 			});
 
 		}
-	}
+	};
 	//通过“回车”提交用户名
 	d.getElementById("username").onkeydown = function (e) {
 		e = e || event;
@@ -104,16 +110,4 @@
 		}
 	};
 
-})()
-
-
-
-
-
-
-
-
-
-
-
-
+})();
